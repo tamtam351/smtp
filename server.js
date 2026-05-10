@@ -6,7 +6,6 @@ const path       = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 function buildTransporter(cfg) {
   return nodemailer.createTransport({
@@ -45,6 +44,11 @@ app.post('/api/send', async (req, res) => {
   } catch (err) {
     res.status(500).json({ ok: false, message: err.message });
   }
+});
+
+// Serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 if (require.main === module) {
